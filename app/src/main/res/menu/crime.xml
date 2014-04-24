@@ -4,7 +4,7 @@
     tools:context="com.tackable.foobar.criminalintent.app.CrimeActivity" >
     
     <item android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:title="@string/crime_title"
         android:orderInCategory="100"
         app:showAsAction="never" />
 </menu>
