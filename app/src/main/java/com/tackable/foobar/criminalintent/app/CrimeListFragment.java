@@ -17,6 +17,8 @@ import java.util.ArrayList;
  * Created by stevenwoo on 4/24/14.
  */
 public class CrimeListFragment extends ListFragment {
+    private static final int REQUEST_CRIME = 1;
+
     private ArrayList<Crime> mCrimes;
 
     @Override
