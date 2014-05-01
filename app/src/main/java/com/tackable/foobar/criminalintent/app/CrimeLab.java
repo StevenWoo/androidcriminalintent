@@ -27,7 +27,15 @@ public class CrimeLab {
 
     private CrimeLab(Context appContext ){
         mAppContext = appContext;
-        mCrimes = new ArrayList<Crime>();
+        //mCrimes = new ArrayList<Crime>();
+        mSerializer = new CriminalIntentJSONSerializer(mAppContext, CrimeLab.FILENAME);
+        try {
+            mCrimes = mSerializer.loadCrimes();
+        }
+        catch (Exception e){
+            mCrimes = new ArrayList<Crime>();
+            Log.e(TAG, "error loading crimes ", e);
+        }
     }
 
     public static CrimeLab get(Context c){
