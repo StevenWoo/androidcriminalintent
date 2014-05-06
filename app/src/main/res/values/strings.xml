@@ -17,6 +17,7 @@
     <string name="subtitle">If you see something, narc</string>
     <string name="delete_crime">Delete</string>
 
+    <string name="take">Take</string>
     <string name="empty_text_view">No crimes</string>
 
 </resources>
