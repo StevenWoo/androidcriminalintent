@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,8 +24,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -38,12 +39,14 @@ public class CrimeFragment extends Fragment{
     private static final int REQUEST_DATE = 0;
     private static final int REQUEST_PHOTO = 1;
     private static final String TAG = "CrimeFragment";
+    private static final String DIALOG_IMAGE = "image";
 
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
     private ImageButton mPhotoButton;
+    private ImageView mPhotoView;
 
 
 
@@ -154,6 +157,21 @@ public class CrimeFragment extends Fragment{
             mPhotoButton.setEnabled(false);
         }
 
+        mPhotoView = (ImageView)v.findViewById(R.id.crime_imageView);
+        mPhotoView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Photo p = mCrime.getPhoto();
+                if (p == null)
+                    return;
+
+                FragmentManager fm = getActivity()
+                        .getSupportFragmentManager();
+                String path = getActivity()
+                        .getFileStreamPath(p.getFilename()).getAbsolutePath();
+                ImageFragment.createInstance(path)
+                        .show(fm, DIALOG_IMAGE);
+            }
+        });
         return v;
     }
 
@@ -173,16 +191,40 @@ public class CrimeFragment extends Fragment{
                 Log.v(TAG, mCrime.getTitle() + " has photo with filename: " + filename );
                 Photo newPhoto = new Photo(filename);
                 mCrime.setPhoto(newPhoto);
+                showPhoto();
             }
             else {
                 Log.v(TAG, "no filename issue");
             }
         }
     }
+    @Override
+    public void onStart() {
+        super.onStart();
+        showPhoto();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        PictureUtils.cleanImageView(mPhotoView);
+    }
 
     @Override
     public void onPause() {
         super.onPause();
         CrimeLab.get(getActivity()).saveCrimes();
+    }
+
+    private void showPhoto() {
+        // (re)set the image button's image based on our photo
+        Photo p = mCrime.getPhoto();
+        BitmapDrawable b = null;
+        if (p != null) {
+            String path = getActivity()
+                    .getFileStreamPath(p.getFilename()).getAbsolutePath();
+            b = PictureUtils.getScaledDrawable(getActivity(), path);
+        }
+        mPhotoView.setImageDrawable(b);
     }
 }
