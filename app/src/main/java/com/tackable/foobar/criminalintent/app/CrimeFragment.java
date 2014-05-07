@@ -36,6 +36,8 @@ public class CrimeFragment extends Fragment{
     public static final String EXTRA_CRIME_ID = "com.tackable.foobar.criminalintent.crime_id";
     public static final String DIALOG_DATE = "date";
     private static final int REQUEST_DATE = 0;
+    private static final int REQUEST_PHOTO = 1;
+    private static final String TAG = "CrimeFragment";
 
     private Crime mCrime;
     private EditText mTitleField;
@@ -89,7 +91,6 @@ public class CrimeFragment extends Fragment{
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
             if( NavUtils.getParentActivityName(getActivity()) != null) {
                 getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
-                Log.d("onCreateView", "enabling button");
             }
         }
         mTitleField = (EditText)v.findViewById(R.id.crime_title);
@@ -144,7 +145,7 @@ public class CrimeFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(getActivity(), CrimeCameraActivity.class);
-                startActivity(i);
+                startActivityForResult(i, REQUEST_PHOTO);
             }
         });
         PackageManager pm = getActivity().getPackageManager();
@@ -165,6 +166,17 @@ public class CrimeFragment extends Fragment{
             Date date = (Date)intent.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate();
+        }
+        else if( requestCode == REQUEST_PHOTO ){
+            String filename = (String)intent.getStringExtra(CrimeCameraFragment.EXTRA_PHOTO_FILENAME);
+            if( filename != null ){
+                Log.v(TAG, mCrime.getTitle() + " has photo with filename: " + filename );
+                Photo newPhoto = new Photo(filename);
+                mCrime.setPhoto(newPhoto);
+            }
+            else {
+                Log.v(TAG, "no filename issue");
+            }
         }
     }
 
