@@ -1,8 +1,12 @@
 package com.tackable.foobar.criminalintent.app;
 
+import android.app.Activity;
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -56,6 +60,17 @@ public class Crime {
 
     public void setPhoto(Photo p){
         mPhoto = p;
+    }
+
+    public void deletePhoto(Activity activity){
+        if( mPhoto != null){
+            String path = activity.getFileStreamPath(
+                    mPhoto.getFilename()).getAbsolutePath();
+            Log.v("Crime", "deleting" + path );
+            File f = new File(path);
+            f.delete();
+            mPhoto = null;
+        }
     }
 
     @Override

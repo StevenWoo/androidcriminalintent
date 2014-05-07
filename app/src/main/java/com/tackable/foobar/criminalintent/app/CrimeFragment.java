@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -190,6 +191,7 @@ public class CrimeFragment extends Fragment{
             if( filename != null ){
                 Log.v(TAG, mCrime.getTitle() + " has photo with filename: " + filename );
                 Photo newPhoto = new Photo(filename);
+                mCrime.deletePhoto(getActivity());
                 mCrime.setPhoto(newPhoto);
                 showPhoto();
             }

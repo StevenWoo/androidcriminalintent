@@ -160,6 +160,7 @@ public class CrimeListFragment extends android.support.v4.app.ListFragment{
         Crime crime = adapter.getItem(position);
         switch( item.getItemId()){
             case R.id.menu_item_delete_crime:
+                crime.deletePhoto(getActivity());
                 CrimeLab.get(getActivity()).deleteCrime(crime);
                 adapter.notifyDataSetChanged();
                 return true;
