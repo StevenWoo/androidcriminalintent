@@ -55,8 +55,22 @@ public class CrimeFragment extends Fragment{
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
 
+    Callbacks mCallbacks;
 
+    public interface Callbacks {
+        void onCrimeUpdated(Crime crime);
+    }
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mCallbacks = (Callbacks)activity;
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mCallbacks = null;
+    }
     public void updateDate(){
         android.text.format.DateFormat df = new android.text.format.DateFormat();
 
@@ -114,6 +128,8 @@ public class CrimeFragment extends Fragment{
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCrime.setTitle(s.toString());
+                mCallbacks.onCrimeUpdated(mCrime);
+                getActivity().setTitle(mCrime.getTitle());
             }
 
             @Override
@@ -146,6 +162,7 @@ public class CrimeFragment extends Fragment{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mCrime.setSolved(isChecked);
+                mCallbacks.onCrimeUpdated(mCrime);
             }
         });
 
@@ -215,6 +232,7 @@ public class CrimeFragment extends Fragment{
         if( requestCode == REQUEST_DATE ){
             Date date = (Date)intent.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
+            mCallbacks.onCrimeUpdated(mCrime);
             updateDate();
         }
         else if( requestCode == REQUEST_PHOTO ){
@@ -224,6 +242,7 @@ public class CrimeFragment extends Fragment{
                 Photo newPhoto = new Photo(filename);
                 mCrime.deletePhoto(getActivity());
                 mCrime.setPhoto(newPhoto);
+                mCallbacks.onCrimeUpdated(mCrime);
                 showPhoto();
             }
             else {
@@ -243,6 +262,7 @@ public class CrimeFragment extends Fragment{
             c.moveToFirst();
             String suspect = c.getString(0);
             mCrime.setSuspect(suspect);
+            mCallbacks.onCrimeUpdated(mCrime);
             mSuspectButton.setText(suspect);
             c.close();
         }

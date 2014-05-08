@@ -15,7 +15,11 @@ import static android.support.v4.view.ViewPager.OnPageChangeListener;
 /**
  * Created by stevenwoo on 4/27/14.
  */
-public class CrimePagerActivity extends FragmentActivity {
+public class CrimePagerActivity extends FragmentActivity
+  implements  CrimeFragment.Callbacks {
+    public void onCrimeUpdated( Crime crime ){
+
+    }
 
     private ViewPager mViewPager;
     private ArrayList<Crime> mCrimes;
